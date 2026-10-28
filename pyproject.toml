@@ -1,0 +1,13 @@
+[tool.ruff]
+line-length = 170
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = [
+  "E731",  # small lambdas for row getters are intentional
+  "B905",  # zip() over columns/widths of different lengths is intentional
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

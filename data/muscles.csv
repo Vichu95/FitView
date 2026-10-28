@@ -1,0 +1,35 @@
+ID,Name,Group,Drawn on
+chest_u,Chest - Upper,Chest,Front
+chest_m,Chest - Mid,Chest,Front
+chest_l,Chest - Lower,Chest,Front
+delt_f,Delt - Front,Shoulders,Front
+delt_s,Delt - Side,Shoulders,Front+Back
+delt_r,Delt - Rear,Shoulders,Back
+cuff,Rotator Cuff,Shoulders,Back
+trap_u,Traps - Upper,Back,Front+Back
+trap_m,Traps - Mid,Back,Back
+trap_l,Traps - Lower,Back,Back
+rhomb,Rhomboids,Back,Back
+lats,Lats,Back,Front+Back
+teres,Teres Major,Back,Back
+erect,Lower Back (Erectors),Back,Back
+bi_long,Biceps - Long Head,Arms,Front
+bi_short,Biceps - Short Head,Arms,Front
+brach,Brachialis,Arms,Front
+tri_long,Triceps - Long Head,Arms,Back
+tri_lat,Triceps - Lateral/Medial,Arms,Back
+fore_flex,Forearm Flexors / Grip,Arms,Front
+fore_ext,Forearm Extensors,Arms,Front+Back
+abs,Abs (Rectus),Core,Front
+obl,Obliques,Core,Front+Back
+tva,Deep Core (TVA),Core,Not drawn
+serr,Serratus,Core,Front
+hipflex,Hip Flexors,Core,Front
+glute_max,Glutes - Max,Legs,Back
+glute_med,Glutes - Med,Legs,Back
+abduct,Abductors (TFL),Legs,Front
+adduct,Adductors,Legs,Front+Back
+quads,Quads,Legs,Front
+hams,Hamstrings,Legs,Back
+calves,Calves,Legs,Front+Back
+tib,Tibialis (Shin),Legs,Front

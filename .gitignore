@@ -1,0 +1,22 @@
+# Your personal data: library workbook, plans and exports
+workspace/
+
+# Excel lock files
+~$*
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local tool config
+.claude/

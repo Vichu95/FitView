@@ -1,0 +1,34 @@
+name: Exercise request / muscle weight correction
+description: Suggest a new exercise for the library, or a change to which muscles an exercise hits
+labels: [library]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Exercise name
+      placeholder: "e.g. Ice Cream Maker"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Request type
+      options: [New exercise, Muscle weight correction, Other data fix]
+    validations:
+      required: true
+  - type: textarea
+    id: muscles
+    attributes:
+      label: Muscles and weights
+      description: "Use 1 = main mover, 0.5 = secondary, 0.25 = stabiliser. Muscle names as in data/muscles.csv."
+      placeholder: |
+        Lats: 1
+        Teres Major: 0.5
+        Abs (Rectus): 0.5
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Reasoning / sources
+      description: Why these weights? Links to EMG studies, coaching references or videos help.

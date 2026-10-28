@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitView</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">Fit<span>View</span></div>
+    <div class="plan-controls">
+      <label for="plan-select" class="lbl">Plan</label>
+      <select id="plan-select"></select>
+      <button class="btn save" id="btn-save" title="Save this plan to its Excel file (Ctrl+S)" disabled>Save</button>
+      <button class="btn ghost" id="btn-discard" title="Throw away unsaved changes" hidden>Discard</button>
+      <button class="btn" id="btn-new" title="Create an empty plan">New</button>
+      <button class="btn" id="btn-copy" title="Copy this plan under a new name">Duplicate</button>
+      <button class="btn" id="btn-rename">Rename</button>
+      <button class="btn danger" id="btn-delete">Delete</button>
+      <div class="menu">
+        <button class="btn primary" id="btn-export">Export ▾</button>
+        <div id="export-menu" class="menu-pop" hidden></div>
+      </div>
+      <button class="btn ghost" id="btn-reload" title="Re-read FitView.xlsx (after editing it in Excel)">↻ Reload Excel</button>
+    </div>
+    <div id="status" class="status"></div>
+  </header>
+
+  <nav id="tabs" class="tabs"></nav>
+
+  <main class="layout">
+    <div id="plan" class="plan"></div>
+    <aside id="body-panel" class="body-panel"></aside>
+  </main>
+
+  <footer class="foot">
+    <span>FitView <span id="version"></span> · <span id="workspace" title="Your library workbook and plan files live here"></span></span>
+    <span>Muscle weights and volume targets are estimates, not medical advice. With injuries or pain, check with a qualified professional.
+      <a href="https://github.com/Vichu95/FitView/blob/main/docs/methodology.md" target="_blank" rel="noopener">How counting works</a></span>
+  </footer>
+
+  <div id="modal-root" class="modal-root" hidden></div>
+  <div id="tip" class="tip" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
