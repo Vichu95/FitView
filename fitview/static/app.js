@@ -202,17 +202,28 @@ function renderPlan() {
   }
 }
 
-function renderBodyPanel() {
+// The panel has a fixed head (title + body map + legend) and a scrolling list below it, so the body
+// map never moves. The list's scroll position is kept per view across re-renders.
+const panelScroll = {};
+function setBodyPanel(key, head, list) {
   const panel = $('#body-panel');
+  const old = panel.querySelector('.bp-scroll');
+  if (old && panel.dataset.key) panelScroll[panel.dataset.key] = old.scrollTop;
+  panel.dataset.key = key;
+  panel.innerHTML = `<div class="bp-head">${head}</div><div class="bp-scroll">${list}</div>`;
+  panel.querySelector('.bp-scroll').scrollTop = panelScroll[key] || 0;
+}
+
+function renderBodyPanel() {
   const focus = focusExercise();
   if (focus && findEx(focus)) {
     const ex = findEx(focus);
     const pinned = pinnedInPlan();
     const rows = Object.entries(ex.muscles).sort((a, b) => b[1] - a[1]).map(([mid, w]) =>
       `<li><i style="background:var(${w >= 1 ? '--lvl3' : w >= 0.5 ? '--lvl2' : '--lvl1'})"></i>${esc(state.muscleById[mid]?.name || mid)}<span>${w >= 1 ? 'main' : w >= 0.5 ? 'secondary' : 'stabiliser'}</span></li>`).join('');
-    panel.innerHTML = `<h2>${exLink(ex.name)}</h2>
+    setBodyPanel('exercise', `<h2>${exLink(ex.name)}</h2>
       <p class="sub">${pinned ? 'Selected - click it again, click elsewhere or press Esc for the full body view' : 'Muscles this exercise hits (click the exercise to keep it here)'}</p>
-      ${bodyPair(ex.muscles, 'weight')}${legendHtml('weight')}<ul class="mlist">${rows}</ul>`;
+      ${bodyPair(ex.muscles, 'weight')}${legendHtml('weight')}`, `<ul class="mlist">${rows}</ul>`);
     return;
   }
   const isWeek = state.view === 'week';
@@ -222,11 +233,11 @@ function renderBodyPanel() {
   const zero = state.muscles.filter((m) => !values[m.id]);
   const low = isWeek ? state.muscles.filter((m) => values[m.id] && values[m.id] < 6) : [];
 
-  panel.innerHTML = `
+  setBodyPanel(state.view, `
     <h2>${isWeek ? 'Weekly coverage' : DAY_NAMES[state.view] + ' coverage'}</h2>
     <p class="sub">${esc(countingNote())} <button class="link" data-act="settings">change</button></p>
     ${bodyPair(values, scale)}
-    ${legendHtml(scale)}
+    ${legendHtml(scale)}`, `
     ${isWeek ? `<div class="gaps">
       ${zero.length ? `<p><b>Not trained (${zero.length}):</b> ${zero.map((m) => esc(m.name)).join(', ')}</p>` : '<p><b>Every muscle is trained at least once.</b></p>'}
       ${low.length ? `<p><b>Low (&lt;6 sets):</b> ${low.map((m) => esc(m.name)).join(', ')}</p>` : ''}
@@ -235,7 +246,7 @@ function renderBodyPanel() {
       const list = conflicts().filter((c) => isWeek || c.from === state.view || c.to === state.view);
       return isWeek || list.length ? `<div class="gaps">${recoveryHtml(list)}</div>` : '';
     })()}
-    ${volumeTable(vol, values, isWeek)}`;
+    ${volumeTable(vol, values, isWeek)}`);
 }
 
 function volumeTable(vol, values, isWeek) {
@@ -877,8 +888,23 @@ function wire() {
   });
 
   // Hovering an exercise in the plan previews just that exercise on the body.
+  // While the page scrolls, exercises slide under a still mouse and would fire hover previews,
+  // making the body panel flicker between views. Ignore hover until scrolling has settled.
+  let scrollingUntil = 0;
+  window.addEventListener('scroll', () => { scrollingUntil = Date.now() + 200; }, { passive: true });
+
+  // Keep the sticky panel sized to the header and footer heights (both wrap on narrow windows).
+  const syncChrome = () => {
+    document.documentElement.style.setProperty('--head-h', `${$('.top').offsetHeight}px`);
+    document.documentElement.style.setProperty('--foot-h', `${$('.foot').offsetHeight}px`);
+  };
+  const chromeObserver = new ResizeObserver(syncChrome);
+  chromeObserver.observe($('.top'));
+  chromeObserver.observe($('.foot'));
+  syncChrome();
+
   $('#plan').addEventListener('mouseover', (e) => {
-    if (pinnedInPlan()) return;
+    if (pinnedInPlan() || Date.now() < scrollingUntil) return;
     const item = e.target.closest('.item');
     const name = item ? state.plan.days[item.dataset.day].items[item.dataset.i]?.exercise : null;
     const next = name && findEx(name) ? name : null;
